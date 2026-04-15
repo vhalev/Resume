@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>樊凡 - 游戏关卡策划简历</title>
+  <style>
+    :root {
+      --bg: #0f1221;
+      --panel: rgba(255, 255, 255, 0.08);
+      --panel-border: rgba(255, 255, 255, 0.18);
+      --text: #e9edff;
+      --muted: #b7bddb;
+      --accent: #6fa8ff;
+      --accent-2: #8a7dff;
+      --ok: #63e0a8;
+      --shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at 10% 20%, #1a1f3d 0%, var(--bg) 45%, #0a0d19 100%);
+      color: var(--text);
+      scroll-behavior: smooth;
+    }
+
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(8px);
+      opacity: 0.25;
+      z-index: -1;
+      animation: drift 16s ease-in-out infinite;
+    }
+
+    .orb-a {
+      width: 260px;
+      height: 260px;
+      background: #6fa8ff;
+      left: -60px;
+      top: 8vh;
+    }
+
+    .orb-b {
+      width: 320px;
+      height: 320px;
+      background: #8a7dff;
+      right: -100px;
+      top: 40vh;
+      animation-delay: -4s;
+    }
+
+    .orb-c {
+      width: 220px;
+      height: 220px;
+      background: #63e0a8;
+      left: 30vw;
+      bottom: -90px;
+      animation-delay: -8s;
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+      50% { transform: translateY(-24px) translateX(18px) scale(1.07); }
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 18px 90px;
+      animation: pageIn 0.9s ease-out;
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .glass {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      border-radius: 18px;
+    }
+
+    .hero {
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: -60% -20% auto auto;
+      width: 260px;
+      height: 260px;
+      background: linear-gradient(120deg, rgba(111, 168, 255, 0.4), rgba(138, 125, 255, 0.2));
+      border-radius: 50%;
+      filter: blur(2px);
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 42px);
+      letter-spacing: 1px;
+    }
+
+    .hero .role {
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-size: clamp(18px, 2.3vw, 24px);
+      font-weight: 600;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chip {
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.06);
+      color: #d9e6ff;
+      font-size: 13px;
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-3px);
+      background: rgba(111, 168, 255, 0.18);
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 22px;
+    }
+
+    .section h2 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      color: #f3f6ff;
+      border-left: 4px solid var(--accent);
+      padding-left: 10px;
+    }
+
+    .strength-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .strength {
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .timeline {
+      position: relative;
+      margin-left: 10px;
+      padding-left: 22px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(var(--accent), rgba(99, 224, 168, 0.5));
+    }
+
+    .item {
+      position: relative;
+      margin-bottom: 18px;
+      padding: 14px 14px 14px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .item::before {
+      content: "";
+      position: absolute;
+      left: -22px;
+      top: 18px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(111, 168, 255, 0.25);
+    }
+
+    .item h3 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .item .sub {
+      margin: 4px 0 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .item ul {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.7;
+      color: #dde4ff;
+    }
+
+    .project-link {
+      color: #9cc4ff;
+      text-decoration: none;
+    }
+
+    .project-link:hover {
+      text-decoration: underline;
+    }
+
+    .shot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .shot-card {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      transform: translateY(10px) scale(0.98);
+      opacity: 0;
+      transition: transform 0.45s ease, opacity 0.45s ease, box-shadow 0.35s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+    }
+
+    .shot-card.visible {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .shot-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.08);
+      transition: transform 0.55s ease, filter 0.35s ease;
+      filter: saturate(1.02) contrast(1.03);
+      cursor: zoom-in;
+    }
+
+    .shot-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 16px 30px rgba(13, 18, 43, 0.45);
+    }
+
+    .shot-card:hover img {
+      transform: scale(1.14);
+      filter: saturate(1.12) contrast(1.06);
+    }
+
+    .shot-name {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      margin: 0;
+      padding: 8px 10px;
+      border-radius: 10px;
+      color: #f2f6ff;
+      font-size: 13px;
+      background: linear-gradient(180deg, rgba(18, 22, 46, 0.45), rgba(10, 13, 28, 0.82));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(3px);
+      transform: translateY(6px);
+      opacity: 0.92;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .shot-card:hover .shot-name {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .shot-tip {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .game-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      background: rgba(9, 13, 28, 0.72);
+      color: #fff;
+      font-size: 20px;
+      line-height: 30px;
+      text-align: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      user-select: none;
+    }
+
+    .game-nav.prev {
+      left: 8px;
+    }
+
+    .game-nav.next {
+      right: 8px;
+    }
+
+    .shot-card:hover .game-nav {
+      opacity: 1;
+    }
+
+    .game-nav:hover {
+      transform: translateY(-50%) scale(1.07);
+      background: rgba(27, 35, 66, 0.86);
+    }
+
+    .game-dots {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 46px;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      z-index: 2;
+    }
+
+    .game-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      background: rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .game-dot.active {
+      background: rgba(111, 168, 255, 0.95);
+      transform: scale(1.15);
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(6, 9, 18, 0.88);
+      padding: 20px;
+    }
+
+    .lightbox.show {
+      display: flex;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .lightbox-inner {
+      max-width: min(1200px, 96vw);
+      max-height: 94vh;
+      width: fit-content;
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      background: rgba(9, 13, 28, 0.95);
+      transform: scale(0.95);
+      animation: zoomIn 0.22s ease forwards;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.95); }
+      to { transform: scale(1); }
+    }
+
+    .lightbox-img {
+      display: block;
+      max-width: 96vw;
+      max-height: calc(94vh - 58px);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      background: #03060f;
+    }
+
+    .lightbox-caption {
+      padding: 10px 14px;
+      color: #e9eeff;
+      font-size: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 999px;
+      background: rgba(12, 16, 35, 0.8);
+      color: #fff;
+      font-size: 24px;
+      line-height: 36px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .lightbox-close:hover {
+      transform: scale(1.08);
+      background: rgba(28, 35, 66, 0.9);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1001;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(12, 16, 35, 0.82);
+      color: #fff;
+      font-size: 28px;
+      line-height: 38px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .lightbox-nav.prev {
+      left: 10px;
+    }
+
+    .lightbox-nav.next {
+      right: 10px;
+    }
+
+    .lightbox-nav:hover {
+      transform: translateY(-50%) scale(1.08);
+      background: rgba(28, 35, 66, 0.9);
+    }
+
+    .lightbox-nav[hidden] {
+      display: none;
+    }
+
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 680px) {
+      .hero {
+        padding: 20px;
+      }
+      .section {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="bg-orb orb-c"></div>
+
+  <main class="page">
+    <section class="hero glass reveal">
+      <h1>樊凡</h1>
+      <p class="role">游戏关卡策划</p>
+      <div class="meta">
+        <span>电话：13776643246</span>
+        <span>邮箱：vhale@qq.com</span>
+        <span>地点：上海</span>
+        <span>求职意向：关卡策划</span>
+      </div>
+      <div class="chips">
+        <span class="chip">3年 Unity 开发经验</span>
+        <span class="chip">MMO 战斗副本设计</span>
+        <span class="chip">北美留学背景</span>
+        <span class="chip">深度 UGC 玩家</span>
+      </div>
+    </section>
+
+    <section class="section glass reveal">
+      <h2>核心优势</h2>
+      <div class="strength-grid">
+        <article class="strength">
+          <strong>多人玩法关卡经验</strong><br>
+          3年 MMO 关卡战斗策划经验，独立产出 20+ 个战斗与活动副本，覆盖需求设计、逻辑落地与数值调优全流程。
+        </article>
+        <article class="strength">
+          <strong>UGC 与模拟经营洞察</strong><br>
+          资深造景与模拟生活游戏玩家，能快速识别编辑器使用者痛点，并转化为可执行的关卡交互方案。
+        </article>
+        <article class="strength">
+          <strong>流程优化与协作</strong><br>
+          善于定位生产管线瓶颈，曾通过配置手册与教学文档推动标准化，提升跨部门交付效率。
+        </article>
+        <article class="strength">
+          <strong>复合创作能力与全球化视野</strong><br>
+          具备美术与编程基础，拥有国际艺术社群创作经历；佛罗里达国际大学硕士，英文读写无障碍。
+        </article>
+      </div>
+    </section>
+
+    <section class="section glass reveal">
+      <h2>游戏经历</h2>
+      <p class="shot-tip">同一游戏的多张截图已合并到同一卡片，可左右切换并点击大图预览。</p>
+      <div class="shot-grid" id="shotGrid"></div>
+    </section>
+
+    <section class="section glass reveal">
+      <h2>工作经历</h2>
+      <div class="timeline">
+        <article class="item">
+          <h3>心动网络股份有限公司｜关卡策划</h3>
+          <p class="sub">2024.03 - 2026.04</p>
+          <ul>
+            <li>负责 MMO 副本战斗关卡设计，主导怪物机制、AI 逻辑、动效落地与数值调优，独立产出 20+ 副本。</li>
+            <li>设计核心玩法机制与战斗节奏，协同美术打造沉浸式关卡氛围。</li>
+            <li>输出关卡配置手册与需求规范，推动流程标准化并提升跨部门协作效率。</li>
+            <li>主导大型 IP 联动关卡方案，确保玩法机制与 IP 调性一致并达成监修标准。</li>
+            <li>多次绩效超预期，负责复杂高难副本且保持低 bug 率。</li>
+          </ul>
+        </article>
+
+        <article class="item">
+          <h3>厦门真有趣信息科技有限公司｜关卡策划</h3>
+          <p class="sub">2022.08 - 2023.07</p>
+          <ul>
+            <li>负责 MMORPG 大世界关卡背景、剧情任务、地理风貌与白盒动线设计。</li>
+            <li>参与城市关卡任务线与 NPC 排布设计，强化世界观表达与探索体验。</li>
+            <li>参与副本战斗流程设计，协同战斗策划打磨怪物技能与关卡叙事匹配。</li>
+            <li>在测试阶段基于数据反馈迭代玩法重心，积累项目迭代与复盘经验。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section glass reveal">
+      <h2>项目经历</h2>
+      <div class="timeline">
+        <article class="item">
+          <h3>出发吧麦芬｜关卡策划</h3>
+          <p class="sub">2024.03 - 2026.04</p>
+          <ul>
+            <li>面向“挂机养成 + 副本验证”核心循环，主导战斗关卡从概念到落地的全流程设计。</li>
+            <li>在副本储备完成后承担创新玩法探索任务，缓解玩家重复打本疲劳。</li>
+            <li>主导两次大型 IP 联动副本设计，兼顾世界观融合、机制适配与视觉统一。</li>
+          </ul>
+        </article>
+
+        <article class="item">
+          <h3>龙门港冒险团（代号：野炊）｜关卡设计</h3>
+          <p class="sub">2022.08 - 2023.07</p>
+          <ul>
+            <li>负责主城、野外与叙事表达设计，参与解谜玩法、POI 与部分地编工作。</li>
+            <li>结合测试反馈调整玩法重心，从探索玩法逐步转向战斗副本设计。</li>
+          </ul>
+        </article>
+
+        <article class="item">
+          <h3>纪录片《麟州故城寻古记》｜策划 / 撰稿</h3>
+          <p class="sub">2021.09 - 2022.05</p>
+          <ul>
+            <li>担任策划与分镜助理，独立完成解说词撰写，作品于央视探索发现栏目播出。</li>
+            <li>参与地方文化 IP 影视基地相关策划与协同推进。</li>
+            <li><a class="project-link" href="https://tv.cctv.com/v/v1/VIDEwaJmi65YRmDPQ6ZHnDvf211129.html" target="_blank" rel="noopener noreferrer">项目链接</a></li>
+          </ul>
+        </article>
+
+        <article class="item">
+          <h3>周边二次元文创｜设计 / 策划 / 宣传</h3>
+          <p class="sub">2017.01 - 2020.06</p>
+          <ul>
+            <li>作为创作者运营同人内容账号，单作品最高阅读量达 1599k，热度 37k。</li>
+            <li>策划并售卖贴纸、书签、便利贴等文创产品，月销 300+。</li>
+            <li><a class="project-link" href="https://imperarity.lofter.com/post/45a43e_ef55c893" target="_blank" rel="noopener noreferrer">Lofter 主页</a></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section glass reveal">
+      <h2>教育经历</h2>
+      <div class="timeline">
+        <article class="item">
+          <h3>佛罗里达国际大学｜全球事务硕士</h3>
+          <p class="sub">2019 - 2021</p>
+          <ul>
+            <li>研究方向：文化安全（跨文化市场风险控制），GPA 3.8 / 4。</li>
+            <li>完成 NGO / 非盈利组织六个月调研项目，产出毕业论文与公开报告。</li>
+          </ul>
+        </article>
+
+        <article class="item">
+          <h3>南京传媒学院｜文化产业管理本科</h3>
+          <p class="sub">2011 - 2015</p>
+          <ul>
+            <li>系统学习文化产业理论与传媒技能（策划、分镜、剪辑、电脑绘图等）。</li>
+            <li>参与动漫社原创角色设定与背景故事创作。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="关闭">×</button>
+    <div class="lightbox-inner">
+      <button class="lightbox-nav prev" id="lightboxPrev" type="button" aria-label="上一张">‹</button>
+      <button class="lightbox-nav next" id="lightboxNext" type="button" aria-label="下一张">›</button>
+      <img class="lightbox-img" id="lightboxImg" src="" alt="">
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, { threshold: 0.16 });
+
+    document.querySelectorAll(".reveal").forEach((node) => observer.observe(node));
+
+    const screenshotFiles = [
+      "./Farm Together1.jpg",
+      "./Farm Together2.jpg",
+      "./Garden Galaxy.jpg",
+      "./magicavoxel.png",
+      "./magicavoxel2.png",
+      "./MakeRoom1.jpg",
+      "./MakeRoom2.jpg",
+      "./恐龙公园.jpg",
+      "./露玛岛.jpg"
+    ];
+
+    const shotGrid = document.getElementById("shotGrid");
+    const groups = new Map();
+    const gameHours = {
+      "Farm Together": "803h",
+      "Garden Galaxy": "54h",
+      "恐龙公园": "83h",
+      "露玛岛": "74h",
+      "MakeRoom": "48h"
+    };
+    const gameOrder = [
+      "Farm Together",
+      "Garden Galaxy",
+      "恐龙公园",
+      "露玛岛",
+      "MakeRoom",
+      "magicavoxel"
+    ];
+
+    function getGameNameFromFile(filePath) {
+      const filename = filePath.split("/").pop().replace(/\.[^.]+$/, "");
+      return filename.replace(/\d+$/, "").trim();
+    }
+
+    screenshotFiles.forEach((file) => {
+      const gameName = getGameNameFromFile(file);
+      if (!groups.has(gameName)) {
+        groups.set(gameName, []);
+      }
+      groups.get(gameName).push(file);
+    });
+
+    function createGameCard(gameName, files) {
+      const card = document.createElement("article");
+      card.className = "shot-card";
+      card.dataset.index = "0";
+      card.dataset.files = JSON.stringify(files);
+      const hourText = gameHours[gameName] ? ` · ${gameHours[gameName]}` : "";
+      card.innerHTML = `
+        <img src="${files[0]}" alt="${gameName}" data-role="shot-image">
+        ${files.length > 1 ? `
+          <button class="game-nav prev" type="button" aria-label="上一张">‹</button>
+          <button class="game-nav next" type="button" aria-label="下一张">›</button>
+          <div class="game-dots" data-role="dots"></div>
+        ` : ""}
+        <figcaption class="shot-name">${gameName}${hourText}</figcaption>
+      `;
+
+      if (files.length > 1) {
+        const dotsWrap = card.querySelector("[data-role='dots']");
+        files.forEach((_, idx) => {
+          const dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = `game-dot${idx === 0 ? " active" : ""}`;
+          dot.setAttribute("aria-label", `切换到第 ${idx + 1} 张`);
+          dot.dataset.dotIndex = String(idx);
+          dotsWrap.appendChild(dot);
+        });
+      }
+
+      return card;
+    }
+
+    Array.from(groups.entries())
+      .sort((a, b) => {
+        const ai = gameOrder.indexOf(a[0]);
+        const bi = gameOrder.indexOf(b[0]);
+        const av = ai === -1 ? 999 : ai;
+        const bv = bi === -1 ? 999 : bi;
+        return av - bv;
+      })
+      .forEach(([name, files]) => {
+      shotGrid.appendChild(createGameCard(name, files));
+      });
+
+    const shotObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const delay = Number(entry.target.dataset.delay || "0");
+          setTimeout(() => {
+            entry.target.classList.add("visible");
+          }, delay);
+          shotObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll(".shot-card").forEach((card, index) => {
+      card.dataset.delay = String(index * 90);
+      shotObserver.observe(card);
+    });
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightboxImg");
+    const lightboxCaption = document.getElementById("lightboxCaption");
+    const lightboxClose = document.getElementById("lightboxClose");
+    const lightboxPrev = document.getElementById("lightboxPrev");
+    const lightboxNext = document.getElementById("lightboxNext");
+    const lightboxState = {
+      files: [],
+      index: 0,
+      name: ""
+    };
+
+    function renderLightbox() {
+      if (!lightboxState.files.length) return;
+      const safeIndex = ((lightboxState.index % lightboxState.files.length) + lightboxState.files.length) % lightboxState.files.length;
+      lightboxState.index = safeIndex;
+      lightboxImg.src = lightboxState.files[safeIndex];
+      lightboxImg.alt = lightboxState.name;
+      lightboxCaption.textContent = lightboxState.name;
+      const hasMultiple = lightboxState.files.length > 1;
+      lightboxPrev.hidden = !hasMultiple;
+      lightboxNext.hidden = !hasMultiple;
+    }
+
+    function stepLightbox(step) {
+      if (lightboxState.files.length <= 1) return;
+      lightboxState.index += step;
+      renderLightbox();
+    }
+
+    function openLightbox(files, index, name) {
+      lightboxState.files = Array.isArray(files) ? files : [];
+      lightboxState.index = Number.isFinite(index) ? index : 0;
+      lightboxState.name = name;
+      renderLightbox();
+      lightbox.classList.add("show");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("show");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightboxImg.src = "";
+      lightboxState.files = [];
+      lightboxState.index = 0;
+      lightboxState.name = "";
+      document.body.style.overflow = "";
+    }
+
+    function updateCardImage(card, nextIndex) {
+      const files = JSON.parse(card.dataset.files || "[]");
+      if (!files.length) return;
+      const length = files.length;
+      const safeIndex = ((nextIndex % length) + length) % length;
+      card.dataset.index = String(safeIndex);
+
+      const imageNode = card.querySelector("[data-role='shot-image']");
+      imageNode.src = files[safeIndex];
+
+      card.querySelectorAll(".game-dot").forEach((dot, idx) => {
+        dot.classList.toggle("active", idx === safeIndex);
+      });
+    }
+
+    document.querySelectorAll(".shot-card").forEach((card) => {
+      card.addEventListener("click", (event) => {
+        const files = JSON.parse(card.dataset.files || "[]");
+        const currentIndex = Number(card.dataset.index || "0");
+        const gameName = card.querySelector(".shot-name")?.textContent?.trim() || "";
+
+        if (event.target.classList.contains("prev")) {
+          event.stopPropagation();
+          updateCardImage(card, currentIndex - 1);
+          return;
+        }
+
+        if (event.target.classList.contains("next")) {
+          event.stopPropagation();
+          updateCardImage(card, currentIndex + 1);
+          return;
+        }
+
+        if (event.target.classList.contains("game-dot")) {
+          event.stopPropagation();
+          updateCardImage(card, Number(event.target.dataset.dotIndex || "0"));
+          return;
+        }
+
+        openLightbox(files, currentIndex, gameName);
+      });
+    });
+
+    lightboxPrev.addEventListener("click", () => stepLightbox(-1));
+    lightboxNext.addEventListener("click", () => stepLightbox(1));
+    lightboxClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && lightbox.classList.contains("show")) {
+        closeLightbox();
+        return;
+      }
+      if (event.key === "ArrowLeft" && lightbox.classList.contains("show")) {
+        event.preventDefault();
+        stepLightbox(-1);
+      }
+      if (event.key === "ArrowRight" && lightbox.classList.contains("show")) {
+        event.preventDefault();
+        stepLightbox(1);
+      }
+    });
+  </script>
+</body>
+</html>
